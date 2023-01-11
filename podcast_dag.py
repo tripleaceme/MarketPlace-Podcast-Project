@@ -1,5 +1,4 @@
 from airflow import DAG
-from airflow.decorators import task
 from airflow.operators.python import PythonOperator
 from airflow.providers.sqlite.operators.sqlite import SqliteOperator
 from airflow.providers.sqlite.hooks.sqlite import SqliteHook
