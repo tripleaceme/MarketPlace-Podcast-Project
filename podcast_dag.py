@@ -15,7 +15,19 @@ default_args = {'owner': 'Ayoade Abel',
         'retries': 2,
         'retry_delay': timedelta(minutes=5),
         }
+urls = ['https://www.marketplace.org/feed/podcast/marketplace-morning-report',
+        'https://www.marketplace.org/feed/podcast/marketplace-tech',
+        'https://feeds.megaphone.fm/WWO1595437966', # this might require an extra look.
+        'https://www.marketplace.org/feed/podcast/marketplace',
+        'https://www.marketplace.org/feed/podcast/make-me-smart',
+        'https://www.marketplace.org/feed/podcast/how-we-survive',
+        'https://www.marketplace.org/feed/podcast/this-is-uncomfortable-reema-khrais',
+        'https://www.marketplace.org/feed/podcast/corner-office-from-marketplace',
+        'https://www.marketplace.org/feed/podcast/the-uncertain-hour',
+        'https://www.marketplace.org/feed/podcast/million-bazillion'
+        ]
 
+# change the url, save the code , clear the _et_episodes and populate_db task in webserver to get the new feed into the database
 
 p_url = 'https://www.marketplace.org/feed/podcast/marketplace-morning-report'
 
@@ -48,6 +60,7 @@ def _load_database(ti):
                                     episode['description'],
                                     episode['itunes:duration'],
                                     episode['enclosure']['@url'],
+                                    episode['link'].split('/')[-2],
                                     filename]
                                     )
         populate_db.insert_rows(table='episodes', rows=new_episodes, target_fields=['p_title',
@@ -59,6 +72,7 @@ def _load_database(ti):
                                                                                     'p_description',
                                                                                     'p_duration',
                                                                                     'p_download',
+                                                                                    'P_category',
                                                                                     'p_filename']
                                                                                     )
 
@@ -81,6 +95,7 @@ with DAG(dag_id='dowload_podcasts',default_args=default_args,description=' downl
                 p_description TEXT,
                 p_duration TEXT,
                 p_download TEXT,
+                p_category TEXT,
                 p_filename TEXT
             )
             """,
